@@ -12,17 +12,17 @@ const tarologos = [
     { id: 3, nome: 'Luna Astral', especialidade: 'Tarot de Thoth', valorConsulta: 150, disponivel: false },
 ]
 
-//rota de teste inicial
+//ROTA DE TESTE INICIAL
 app.get('/', (req, res) => {
     res.send('API do tarô Mediúnico rodando com sucesso!');
 });
 
-//Rota para listar TODOS os tarólogos
+//ROTA PARA LISTAR TODOS OS TARÓLOGOS
 app.get('/tarologos', (req, res) => {
     res.json(tarologos);
 });
 
-//rota para buscar UM tarólogo específico pelo ID
+//ROTA PARA BUSCAR UM TARÓLOGO PELO ID
 app.get('/tarologos/:id', (req, res) => {
     const idBusca = Number(req.params.id);
     const tarologoEncontrado = tarologos.find(t => t.id === idBusca);
@@ -33,7 +33,7 @@ app.get('/tarologos/:id', (req, res) => {
     res.json(tarologoEncontrado);
 })
 
-//Rota POST para cadastrar um novo tarólogo
+//ROTA POST PARA CADASTRAR UM NOVO TARÓLOGO
 app.post('/tarologos', (req, res) => {
     //PEGA OS DADOS ENVIADOS NO CORPO DA REQUEISIÇÃO (JSON)
     const { nome, especialidade, valorConsulta } = req.body;
@@ -55,7 +55,45 @@ app.post('/tarologos', (req, res) => {
 
 });
 
-//Inicialização do servidor
+//INICIALIZAÇÃO DO SERVIDOR
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
+
+//ROTA PUT PARA ATUALIZAR OS DADOS DE UM TARÓLOGO PELO ID
+app.put('/tarologos/:id', (req, res) => {
+    const idBusca = Number(req.params.id);
+    const { nome, especialidade, valorConsulta, disponivel } = req.body;
+
+    //Busca a posição (indice) do tarologo na lista
+    const index = tarologos.findIndex(t => t.id === idBusca);
+
+    if (index === -1) {
+        return res.status(404).json({ mensagem: 'Tarologo não encontrado para atualização' });
+    }
+
+    //Atualiza os campos do tarologo encontrado na lista
+    tarologos[index] = {
+        id: idBusca,
+        nome: nome || tarologos[index].nome,
+        especialidade: especialidade || tarologos[index].especialidade,
+        valorConsulta: valorConsulta || tarologos[index].valorConsulta,
+        disponivel: disponivel !== undefined ? disponivel : tarologos[index].disponivel
+    };
+
+    res.json(tarologos[index]);
+});
+
+//ROTA DELETE PARA REMOVER UM TARÓLOGO PELO ID
+app.delete('/tarologos/:id', (req, res) => {
+    const idBusca = Number(req.params.id);
+    const index = tarologos.findIndex(t => t.id === idBusca);
+
+    if (index === -1) {
+        return res.status(404).json({ mensagem: 'Tarologo não encontrado para remoção' });
+    }
+
+    // Remove um item a partir da posição (index) na lista
+    tarologos.splice(index, 1);
+    res.json({ mensagem: `Tarologo com ID ${idBusca} removido com sucesso` });
 });
