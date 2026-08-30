@@ -143,6 +143,21 @@ app.get('/clientes', (req, res) => {
     res.json(clientes);
 });
 
+app.post('/clientes', (req, res) => {
+    const { nome, email, saldo } = req.body;
+    const novoCliente = {
+        id: clientes.length > 0 ? Math.max(...clientes.map(c => c.id)) + 1 : 1,
+        nome,
+        email,
+        saldo: saldo || 0
+    };
+    clientes.push(novoCliente);
+    res.status(201).json({
+        mensagem: 'Cliente criado com sucesso',
+        cliente: novoCliente
+    });
+});
+
 app.put('/clientes/:id', (req, res) => {
     const idBusca = Number(req.params.id);
     const { nome, email, saldo } = req.body;
@@ -166,6 +181,17 @@ app.put('/clientes/:id', (req, res) => {
     });
 });
 
+app.delete('/clientes/:id', (req, res) => {
+    const idBusca = Number(req.params.id);
+    const index = clientes.findIndex(c => c.id === idBusca);
+
+    if (index === -1) {
+        return res.status(404).json({ mensagem: 'Cliente não encontrado para remoção' });
+    }
+
+    clientes.splice(index, 1);
+    res.json({ mensagem: `Cliente com ID ${idBusca} removido com sucesso` });
+});
 
 //=====================================================================================================================================
 // INICIALIZAÇÃO DO SERVIDOR (Sempre no final)

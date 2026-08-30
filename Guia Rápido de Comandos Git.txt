@@ -1,0 +1,35 @@
+Guia Rápido de Comandos Git
+
+
+Verificar Estado e Histórico
+
+
+git status — Mostra o estado dos arquivos (modificados, salvos, novos).
+
+git log --oneline -n 5 — Mostra os últimos 5 commits de forma resumida.
+
+git branch — Mostra em qual branch você está trabalhando.
+
+git remote -v — Mostra os repositórios remotos vinculados (GitHub).
+
+Salvar e Enviar Alterações (Fluxo do dia a dia)
+
+git add . — Adiciona todas as alterações feitas para a fila de salvamento.
+
+git commit -m "sua mensagem aqui" — Salva uma foto (versão) das alterações no repositório local.
+
+git push origin main — Envia os seus commits locais para o GitHub.
+
+Atualizar e Sincronizar
+
+git pull origin main — Baixa as alterações do GitHub para a sua máquina local.
+
+git fetch — Busca as atualizações do servidor sem aplicar alterações no código ainda.
+
+Desfazer Coisas (Socorro!)
+
+git restore . — Descarta todas as alterações locais não salvas (cuidado!).
+
+git checkout -- nome_do_arquivo — Descarta alterações de um arquivo específico.
+
+git reset --soft HEAD~1 — Desfaz o último commit mantendo as alterações no seu código.
