@@ -1,41 +1,42 @@
-// Nosso "banco de dados" temporário
+const bcrypt = require('bcryptjs');
+
 // Banco de dados simulado (Lista de tarólogos)
 let tarologos = [
-    { 
-        id: 1, 
-        nome: 'Soraia Vidente', 
-        especialidade: 'Tarot de Marselha', 
-        bio: 'Especialista em orientações amorosas e profissionais há mais de 10 anos.',
-        valorConsulta: 120, 
-        valorMinuto: 4.50,
-        disponivel: true 
+    {
+        id: 1,
+        nome: 'Astra Tarot',
+        email: 'astra@taro.com',
+        senha: bcrypt.hashSync('123456', 10),
+        especialidade: 'Cartomancia e Astrologia',
+        bio: 'Com mais de 5 anos de experiência, Astra Tarot oferece leituras precisas e intuitivas para ajudar você a encontrar clareza e orientação.',
+        valorConsulta: 100,
+        valorMinuto: 3.00,
+        disponivel: true,
+        status: 'APROVADO', // Status ativo
+        tipo: 'TAROLOGO'
     },
-    { 
-        id: 2, 
-        nome: 'Mestre Mael', 
-        especialidade: 'Baralho Cigano', 
-        bio: 'Leitura intuitiva focada em autoconhecimento e caminhos espirituais.',
-        valorConsulta: 90, 
-        valorMinuto: 3.50,
-        disponivel: true 
-    },
-    { 
-        id: 3, 
-        nome: 'Luna Astral', 
-        especialidade: 'Tarot de Thoth', 
-        bio: 'Mestra em tarô de Thoth, astrologia tradicional e abertura de caminhos.',
-        valorConsulta: 150, 
-        valorMinuto: 5.00,
-        disponivel: false 
-    },
+    {
+        id: 2,
+        nome: 'Mestre Sol',
+        email: 'sol@taro.com',
+        senha: bcrypt.hashSync('123456', 10),
+        especialidade: 'Tarô de Marselha',
+        bio: 'Especialista em tarô de Marselha, com mais de 10 anos de experiência em leituras intuitivas.',
+        valorConsulta: 120,
+        valorMinuto: 4.00,
+        disponivel: true,
+        status: 'PENDENTE', // Aguardando aprovação do Admin
+        tipo: 'TAROLOGO'
+    }
 ];
 
-// ROTA PARA LISTAR TODOS OS TARÓLOGOS
+// ROTA PÚBLICA: Lista apenas os tarólogos APROVADOS para os clientes
 const listarTarologos = (req, res) => {
-    res.json(tarologos);
+    const aprovados = tarologos.filter(t => t.status === 'APROVADO');
+    res.json(aprovados);
 };
 
-// ROTA PARA BUSCAR UM TARÓLOGO PELO ID
+// ROTA PÚBLICA: Busca um tarólogo específico pelo ID
 const buscarTarologo = (req, res) => {
     const idBusca = Number(req.params.id);
     const tarologoEncontrado = tarologos.find(t => t.id === idBusca);
@@ -47,28 +48,35 @@ const buscarTarologo = (req, res) => {
     res.json(tarologoEncontrado);
 };
 
-// ROTA POST PARA CADASTRAR UM NOVO TARÓLOGO
+// ROTA DE AUTO-CADASTRO: Novo tarólogo se cadastrando no site
 const criarTarologo = (req, res) => {
-    const { nome, especialidade, bio, valorConsulta, valorMinuto } = req.body;
+    const { nome, email, especialidade, bio, valorConsulta, valorMinuto, senha } = req.body;
 
     const novoTarologo = {
         id: tarologos.length > 0 ? tarologos[tarologos.length - 1].id + 1 : 1,
-        nome: nome,
-        especialidade: especialidade,
+        nome,
+        email,
+        especialidade,
         bio: bio || '',
         valorConsulta: valorConsulta || 0,
         valorMinuto: valorMinuto || 0,
-        disponivel: true
+        disponivel: true,
+        status: 'PENDENTE', // <- Todo cadastro novo nasce PENDENTE aguardando o Admin
+        tipo: 'TAROLOGO',
+        senha: bcrypt.hashSync(senha, 10)
     };
 
     tarologos.push(novoTarologo);
-    res.status(201).json(novoTarologo);
+    res.status(201).json({
+        mensagem: 'Cadastro realizado com sucesso! Aguarde a aprovação do administrador.',
+        tarologo: novoTarologo
+    });
 };
 
-// ROTA PUT PARA ATUALIZAR OS DADOS DE UM TARÓLOGO EXISTENTE
+// ROTA DO PRÓPRIO TARÓLOGO: Atualizar seus dados de perfil
 const atualizarTarologo = (req, res) => {
     const idBusca = Number(req.params.id);
-    const { nome, especialidade, bio, valorConsulta, valorMinuto, disponivel } = req.body;
+    const { nome, especialidade, bio, valorConsulta, valorMinuto, disponivel, senha } = req.body;
 
     const index = tarologos.findIndex(t => t.id === idBusca);
 
@@ -83,7 +91,8 @@ const atualizarTarologo = (req, res) => {
         bio: bio !== undefined ? bio : tarologos[index].bio,
         valorConsulta: valorConsulta !== undefined ? valorConsulta : tarologos[index].valorConsulta,
         valorMinuto: valorMinuto !== undefined ? valorMinuto : tarologos[index].valorMinuto,
-        disponivel: disponivel !== undefined ? disponivel : tarologos[index].disponivel
+        disponivel: disponivel !== undefined ? disponivel : tarologos[index].disponivel,
+        senha: senha !== undefined ? bcrypt.hashSync(senha, 10) : tarologos[index].senha
     };
 
     return res.status(200).json({
@@ -92,7 +101,7 @@ const atualizarTarologo = (req, res) => {
     });
 };
 
-// ROTA DELETE PARA REMOVER UM TARÓLOGO PELO ID
+// ROTA DO PRÓPRIO TARÓLOGO: Deletar a própria conta
 const removerTarologo = (req, res) => {
     const idBusca = Number(req.params.id);
     const index = tarologos.findIndex(t => t.id === idBusca);
@@ -110,5 +119,6 @@ module.exports = {
     buscarTarologo,
     criarTarologo,
     atualizarTarologo,
-    removerTarologo
+    removerTarologo,
+    tarologos
 };

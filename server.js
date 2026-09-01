@@ -9,7 +9,15 @@ app.use(express.json());
 const clienteRoutes = require('./src/routes/cliente.routes');
 
 const tarologosRoutes = require('./src/routes/tarologos.routes');
-// 2. AVISANDO O EXPRESS PARA USAR AS ROTAS
+
+const authRoutes = require('./src/routes/auth.routes');
+
+const adminRoutes = require('./src/routes/admin.routes');
+
+// 2. USANDO AS ROTAS
+app.use('/auth', authRoutes);
+
+app.use('/admin', adminRoutes);
 
 app.use('/clientes', clienteRoutes);
 
