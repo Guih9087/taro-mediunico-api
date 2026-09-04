@@ -2,9 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const clienteController = require('../controllers/cliente.controller');
-
-// Importamos os middlewares de segurança
 const { autenticar, apenasAdmin } = require('../middlewares/auth.middlewares');
+
+// ROTAS DE SALDO/CARTEIRA
+router.get('/saldo', autenticar, clienteController.verSaldo);
+router.post('/saldo/recarga', autenticar, clienteController.adicionarSaldo);
 
 // PÚBLICA: Qualquer visitante pode se cadastrar como cliente
 router.post('/', clienteController.criarCliente);

@@ -1,63 +1,61 @@
 // src/controllers/auth.controller.js
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Importamos os dados de clientes e tarólogos
+// Importamos os bancos em memória para validar logins
 const { clientes } = require('./cliente.controller');
 const { tarologos } = require('./tarologos.controller');
 const { admins } = require('./admin.controller');
 
-// Chave secreta para assinar o Token (no futuro vai para o arquivo .env)
-const JWT_SECRET = 'minha_chave_secreta_taro_mediunico';
+const SECRET_KEY = 'sua_chave_secreta_super_segura';
 
-const login = (req, res) => {
-    const { email, senha } = req.body;
+const login = (req, res, next) => {
+    try {
+        const { email, senha } = req.body;
 
-    // Busca na ordem: Admin -> Cliente -> Tarólogo
-    let usuario = admins.find(a => a.email === email);
-    let tipoUsuario = 'ADMIN';
-
-    if (!usuario) {
-        usuario = clientes.find(c => c.email === email);
-        tipoUsuario = 'CLIENTE';
-    }
-
-    if (!usuario) {
-        usuario = tarologos.find(t => t.email === email);
-        tipoUsuario = 'TAROLOGO';
-    }
-
-    // Se não achou em nenhuma das tres listas
-    if (!usuario) {
-        return res.status(401).json({ mensagem: 'E-mail ou senha inválidos' });
-    }
-
-    // Comparar a senha digitada com a senha criptografada salva no banco
-    const senhaValida = bcrypt.compareSync(senha, usuario.senha);
-
-    if (!senhaValida) {
-        return res.status(401).json({ mensagem: 'E-mail ou senha inválidos' });
-    }
-
-    // Se deu tudo certo, gerar o Token JWT 
-    const token = jwt.sign(
-        { id: usuario.id, email: usuario.email, tipo: tipoUsuario },
-        JWT_SECRET,
-        { expiresIn: '8h' } // Token expira em 8 horas
-    );
-
-    // Retornar a resposta de sucesso com o Token
-    return res.json({
-        mensagem: 'Login realizado com sucesso!',
-        token: token,
-        usuario: {
-            id: usuario.id,
-            nome: usuario.nome,
-            email: usuario.email,
-            tipo: tipoUsuario
+        if (!email || !senha) {
+            const erro = new Error('E-mail e senha são obrigatórios.');
+            erro.status = 400;
+            throw erro;
         }
-    });
+
+        // Junta todas as listas para procurar o usuário
+        const todosUsuarios = [
+            ...clientes.map(c => ({ ...c, tipo: 'CLIENTE' })),
+            ...tarologos.map(t => ({ ...t, tipo: 'TAROLOGO' })),
+            ...admins.map(a => ({ ...a, tipo: 'ADMIN' }))
+        ];
+
+        const usuario = todosUsuarios.find(u => u.email === email);
+
+        if (!usuario) {
+            const erro = new Error('Credenciais inválidas.');
+            erro.status = 401;
+            throw erro;
+        }
+
+        const senhaValida = bcrypt.compareSync(senha, usuario.senha);
+
+        if (!senhaValida) {
+            const erro = new Error('Credenciais inválidas.');
+            erro.status = 401;
+            throw erro;
+        }
+
+        const token = jwt.sign(
+            { id: usuario.id, email: usuario.email, tipo: usuario.tipo },
+            SECRET_KEY,
+            { expiresIn: '8h' }
+        );
+
+        return res.json({
+            mensagem: 'Login realizado com sucesso!',
+            token,
+            usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email, tipo: usuario.tipo }
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports = { login };

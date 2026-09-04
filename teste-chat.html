@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Chat - TaroMediunico</title>
+    <!-- CDN Oficial do Socket.io para funcionar ao abrir arquivo local -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
+        #caixa-chat { background: #fff; padding: 15px; border-radius: 8px; width: 450px; height: 300px; overflow-y: auto; border: 1px solid #ccc; margin-bottom: 10px; }
+        .msg { margin-bottom: 8px; font-size: 14px; }
+        input, button { padding: 8px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <h2>💬 Teste de Chat em Tempo Real</h2>
+    
+    <div>
+        <label>ID Consulta: </label>
+        <input type="number" id="idConsulta" value="1" style="width: 50px;">
+        
+        <label>Seu Nome: </label>
+        <input type="text" id="emissor" value="Guilherme" style="width: 120px;">
+        
+        <button onclick="entrarNaSala()">1º Conectar na Sala</button>
+    </div>
+
+    <br>
+    <div id="caixa-chat"></div>
+
+    <div>
+        <input type="text" id="mensagem" placeholder="Digite sua mensagem..." style="width: 320px;">
+        <button onclick="enviarMensagem()">2º Enviar</button>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+        const caixaChat = document.getElementById('caixa-chat');
+
+        // Alerta caso a API não esteja rodando no terminal
+        socket.on('connect_error', () => {
+            caixaChat.innerHTML = `<p style="color: red;"><b>❌ Não foi possível conectar ao servidor. O 'node server.js' está rodando no terminal?</b></p>`;
+        });
+
+        function entrarNaSala() {
+            const idConsulta = document.getElementById('idConsulta').value;
+            socket.emit('entrar_sala', idConsulta);
+            caixaChat.innerHTML += `<p style="color: green;"><b>✅ Entrou na sala da consulta #${idConsulta}</b></p>`;
+        }
+
+        function enviarMensagem() {
+            const idConsulta = document.getElementById('idConsulta').value;
+            const emissor = document.getElementById('emissor').value;
+            const mensagemInput = document.getElementById('mensagem');
+            const mensagem = mensagemInput.value;
+
+            if (!mensagem) return;
+
+            socket.emit('enviar_mensagem', { idConsulta, emissor, mensagem });
+            mensagemInput.value = '';
+        }
+
+        socket.on('receber_mensagem', (data) => {
+            const p = document.createElement('p');
+            p.className = 'msg';
+            p.innerHTML = `<strong>[${data.horario}] ${data.emissor}:</strong> ${data.mensagem}`;
+            caixaChat.appendChild(p);
+            caixaChat.scrollTop = caixaChat.scrollHeight;
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,4 @@
 // src/controllers/admin.controller.js
-
 const bcrypt = require('bcryptjs');
 const { tarologos } = require('./tarologos.controller');
 
@@ -9,63 +8,82 @@ let admins = [
         id: 1,
         nome: 'Administrador Master',
         email: 'admin@taromediunico.com',
-        senha: bcrypt.hashSync('admin123', 10), // Senha padrão para testes
+        senha: bcrypt.hashSync('admin123', 10),
         tipo: 'ADMIN'
     }
 ];
 
-// Rota de exemplo para o painel de controle do Admin
-const painelAdmin = (req, res) => {
-    res.json({
-        mensagem: 'Bem-vindo ao Painel Administrativo!',
-        estatisticas: {
-            statusSistema: 'Operacional',
-            usuarioLogado: req.usuario // Dados vindos do Token JWT
+const painelAdmin = (req, res, next) => {
+    try {
+        return res.json({
+            mensagem: 'Bem-vindo ao Painel Administrativo!',
+            estatisticas: {
+                statusSistema: 'Operacional',
+                usuarioLogado: req.usuario
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const listarTodosTarologos = (req, res, next) => {
+    try {
+        return res.json(tarologos);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const alterarStatusTarologo = (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const tarologo = tarologos.find(t => t.id === Number(id));
+
+        if (!tarologo) {
+            const erro = new Error('Tarólogo não encontrado');
+            erro.status = 404;
+            throw erro;
         }
-    });
-};
-// Listar TODOS os tarólogos (Aprovados, Pendentes e Bloqueados)
-const listarTodosTarologos = (req, res) => {
-    res.json(tarologos);
-};
 
-// Aprovar ou Bloquear um tarólogo (PATCH /admin/tarologos/:id/status)
-const alterarStatusTarologo = (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body; // Espera 'APROVADO' ou 'BLOQUEADO'
+        if (!['APROVADO', 'BLOQUEADO', 'PENDENTE'].includes(status)) {
+            const erro = new Error('Status inválido. Use APROVADO, BLOQUEADO ou PENDENTE');
+            erro.status = 400;
+            throw erro;
+        }
 
-    const tarologo = tarologos.find(t => t.id === Number(id));
+        tarologo.status = status;
 
-    if (!tarologo) {
-        return res.status(404).json({ mensagem: 'Tarólogo não encontrado' });
+        return res.json({
+            mensagem: `Status do tarólogo ${tarologo.nome} alterado para ${status} com sucesso!`,
+            tarologo: tarologo
+        });
+    } catch (error) {
+        next(error);
     }
-
-    if (!['APROVADO', 'BLOQUEADO', 'PENDENTE'].includes(status)) {
-        return res.status(400).json({ mensagem: 'Status inválido. Use APROVADO, BLOQUEADO ou PENDENTE' });
-    }
-
-    tarologo.status = status;
-
-    return res.json({
-        mensagem: `Status do tarólogo ${tarologo.nome} alterado para ${status} com sucesso!`,
-        tarologo: tarologo
-    });
 };
 
-// Deletar um tarólogo da base (DELETE /admin/tarologos/:id)
-const deletarTarologo = (req, res) => {
-    const { id } = req.params;
-    const index = tarologos.findIndex(t => t.id === Number(id));
+const deletarTarologo = (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const index = tarologos.findIndex(t => t.id === Number(id));
 
-    if (index === -1) {
-        return res.status(404).json({ mensagem: 'Tarólogo não encontrado' });
+        if (index === -1) {
+            const erro = new Error('Tarólogo não encontrado');
+            erro.status = 404;
+            throw erro;
+        }
+
+        const tarologoRemovido = tarologos.splice(index, 1);
+
+        return res.json({
+            mensagem: `Tarólogo ${tarologoRemovido[0].nome} removido do sistema com sucesso.`
+        });
+    } catch (error) {
+        next(error);
     }
-
-    const tarologoRemovido = tarologos.splice(index, 1);
-
-    return res.json({
-        mensagem: `Tarólogo ${tarologoRemovido[0].nome} removido do sistema com sucesso.`
-    });
 };
 
 module.exports = {

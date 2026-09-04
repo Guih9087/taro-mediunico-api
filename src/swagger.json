@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TaroMediunico API",
+    "description": "API REST para agendamento e consultas de tarô em tempo real.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Autenticar usuário (Cliente, Tarólogo ou Admin)",
+        "responses": {
+          "200": { "description": "Login realizado com sucesso" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/tarologos": {
+      "get": {
+        "summary": "Listar tarólogos aprovados",
+        "responses": {
+          "200": { "description": "Lista de tarólogos cadastrados" }
+        }
+      }
+    },
+    "/consultas": {
+      "get": {
+        "summary": "Listar consultas do usuário logado",
+        "responses": {
+          "200": { "description": "Consultas encontradas" }
+        }
+      },
+      "post": {
+        "summary": "Agendar uma nova consulta",
+        "responses": {
+          "201": { "description": "Consulta agendada com sucesso" },
+          "400": { "description": "Saldo insuficiente ou conflito de horário" }
+        }
+      }
+    },
+    "/avaliacoes": {
+      "post": {
+        "summary": "Avaliar uma consulta finalizada",
+        "responses": {
+          "201": { "description": "Avaliação cadastrada com sucesso" }
+        }
+      }
+    }
+  }
+}
