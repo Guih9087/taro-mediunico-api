@@ -1,21 +1,21 @@
+// src/routes/cliente.routes.js
 const express = require('express');
-// O Router é uma ferramenta do Express específica para criar mini-aplicativos de rotas
-const router = express.Router(); 
-
-// Importamos o nosso controlador que acabamos de criar
+const router = express.Router();
 const clienteController = require('../controllers/cliente.controller');
 
-// Toda vez que acessarem a rota principal ("/"), ele chama a função listarClientes
-router.get('/', clienteController.listarClientes);
+// Importamos os middlewares de segurança
+const { autenticar, apenasAdmin } = require('../middlewares/auth.middlewares');
 
-// Quando mandarem um POST, chama a criarCliente
+// PÚBLICA: Qualquer visitante pode se cadastrar como cliente
 router.post('/', clienteController.criarCliente);
 
-// Quando mandarem um DELETE com um ID, chama a deletarCliente
-router.delete('/:id', clienteController.deletarCliente);
+// PROTEGIDA (ADMIN): Apenas o Admin pode ver a lista completa de clientes cadastrados
+router.get('/', autenticar, apenasAdmin, clienteController.listarClientes);
 
-// Quando mandarem um PUT com um ID, chama a atualizarCliente
-router.put('/:id', clienteController.atualizarCliente);
+// PROTEGIDA (AUTENTICADO): O cliente precisa estar logado para atualizar seus dados
+router.put('/:id', autenticar, clienteController.atualizarCliente);
 
-// Exportamos o roteador pronto para o server.js usar
+// PROTEGIDA (ADMIN): Apenas o Admin pode excluir uma conta de cliente diretamente
+router.delete('/:id', autenticar, apenasAdmin, clienteController.deletarCliente);
+
 module.exports = router;

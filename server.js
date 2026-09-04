@@ -5,7 +5,7 @@ const PORT = 3000;
 // Para o Express entender arquivos JSON
 app.use(express.json());
 
-// 1. IMPORTANDO AS ROTAS
+// IMPORTANDO AS ROTAS
 const clienteRoutes = require('./src/routes/cliente.routes');
 
 const tarologosRoutes = require('./src/routes/tarologos.routes');
@@ -14,7 +14,7 @@ const authRoutes = require('./src/routes/auth.routes');
 
 const adminRoutes = require('./src/routes/admin.routes');
 
-// 2. USANDO AS ROTAS
+// USANDO AS ROTAS
 app.use('/auth', authRoutes);
 
 app.use('/admin', adminRoutes);

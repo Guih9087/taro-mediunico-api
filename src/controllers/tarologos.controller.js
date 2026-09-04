@@ -61,7 +61,7 @@ const criarTarologo = (req, res) => {
         valorConsulta: valorConsulta || 0,
         valorMinuto: valorMinuto || 0,
         disponivel: true,
-        status: 'PENDENTE', // <- Todo cadastro novo nasce PENDENTE aguardando o Admin
+        status: 'PENDENTE', // Todo cadastro novo nasce PENDENTE aguardando o Admin
         tipo: 'TAROLOGO',
         senha: bcrypt.hashSync(senha, 10)
     };

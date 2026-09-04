@@ -14,7 +14,7 @@ const JWT_SECRET = 'minha_chave_secreta_taro_mediunico';
 const login = (req, res) => {
     const { email, senha } = req.body;
 
-    // 1. Busca na ordem: Admin -> Cliente -> Tarólogo
+    // Busca na ordem: Admin -> Cliente -> Tarólogo
     let usuario = admins.find(a => a.email === email);
     let tipoUsuario = 'ADMIN';
 
@@ -33,21 +33,21 @@ const login = (req, res) => {
         return res.status(401).json({ mensagem: 'E-mail ou senha inválidos' });
     }
 
-    // 2. Comparar a senha digitada com a senha criptografada salva no banco
+    // Comparar a senha digitada com a senha criptografada salva no banco
     const senhaValida = bcrypt.compareSync(senha, usuario.senha);
 
     if (!senhaValida) {
         return res.status(401).json({ mensagem: 'E-mail ou senha inválidos' });
     }
 
-    // 3. Se deu tudo certo, gerar o Token JWT (o "crachá digital")
+    // Se deu tudo certo, gerar o Token JWT 
     const token = jwt.sign(
         { id: usuario.id, email: usuario.email, tipo: tipoUsuario },
         JWT_SECRET,
         { expiresIn: '8h' } // Token expira em 8 horas
     );
 
-    // 4. Retornar a resposta de sucesso com o Token
+    // Retornar a resposta de sucesso com o Token
     return res.json({
         mensagem: 'Login realizado com sucesso!',
         token: token,

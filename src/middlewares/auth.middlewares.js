@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'minha_chave_secreta_taro_mediunico';
 
-// 1. Verifica se a requisição possui um Token JWT válido
+// Verifica se a requisição possui um Token JWT válido
 const autenticar = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -11,7 +11,6 @@ const autenticar = (req, res, next) => {
         return res.status(401).json({ mensagem: 'Token de acesso não fornecido' });
     }
 
-    // O padrão de envio é: "Bearer <token>"
     const parts = authHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
         return res.status(401).json({ mensagem: 'Formato de token inválido (esperado: Bearer <token>)' });
@@ -28,10 +27,10 @@ const autenticar = (req, res, next) => {
     }
 };
 
-// 2. Verifica se o usuário logado possui perfil de ADMIN
+// Verifica se o usuário logado possui perfil de ADMIN
 const apenasAdmin = (req, res, next) => {
     if (req.usuario && req.usuario.tipo === 'ADMIN') {
-        return next(); // É admin! Pode prosseguir.
+        return next();
     }
     
     return res.status(403).json({ mensagem: 'Acesso negado: Requer privilégios de Administrador' });

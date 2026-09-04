@@ -3,7 +3,7 @@
 const bcrypt = require('bcryptjs');
 const { tarologos } = require('./tarologos.controller');
 
-// Nosso "banco de dados" temporário de Administradores
+// Banco de dados temporário de Administradores
 let admins = [
     {
         id: 1,
@@ -24,12 +24,12 @@ const painelAdmin = (req, res) => {
         }
     });
 };
-// 1. Listar TODOS os tarólogos (Aprovados, Pendentes e Bloqueados)
+// Listar TODOS os tarólogos (Aprovados, Pendentes e Bloqueados)
 const listarTodosTarologos = (req, res) => {
     res.json(tarologos);
 };
 
-// 2. Aprovar ou Bloquear um tarólogo (PATCH /admin/tarologos/:id/status)
+// Aprovar ou Bloquear um tarólogo (PATCH /admin/tarologos/:id/status)
 const alterarStatusTarologo = (req, res) => {
     const { id } = req.params;
     const { status } = req.body; // Espera 'APROVADO' ou 'BLOQUEADO'
@@ -52,7 +52,7 @@ const alterarStatusTarologo = (req, res) => {
     });
 };
 
-// 3. Deletar um tarólogo da base (DELETE /admin/tarologos/:id)
+// Deletar um tarólogo da base (DELETE /admin/tarologos/:id)
 const deletarTarologo = (req, res) => {
     const { id } = req.params;
     const index = tarologos.findIndex(t => t.id === Number(id));

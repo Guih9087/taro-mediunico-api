@@ -1,23 +1,22 @@
+// src/routes/tarologos.routes.js
 const express = require('express');
-// O Router é uma ferramenta do Express específica para criar mini-aplicativos de rotas
-const router = express.Router(); 
-
-// Importamos o nosso controlador que acabamos de criar
+const router = express.Router();
 const tarologosController = require('../controllers/tarologos.controller');
 
-// Toda vez que acessarem a rota principal ("/"), ele chama a função listarTarologos
-router.get('/', tarologosController.listarTarologos);
+// Importamos os middlewares de segurança
+const { autenticar, apenasAdmin } = require('../middlewares/auth.middlewares');
 
-// Quando mandarem um GET com um ID, chama a buscarTarologo
+// PÚBLICAS: Qualquer cliente/visitante pode ver a lista de aprovados e ver detalhes
+router.get('/', tarologosController.listarTarologos);
 router.get('/:id', tarologosController.buscarTarologo);
 
-// Quando mandarem um POST, chama a criarTarologo
+// PÚBLICA: Novo tarólogo se cadastrando (vai pra lista PENDENTE)
 router.post('/', tarologosController.criarTarologo);
 
-// Quando mandarem um PUT com um ID, chama a atualizarTarologo
-router.put('/:id', tarologosController.atualizarTarologo);
+// PROTEGIDA (AUTENTICADO): O tarólogo precisa estar logado para alterar seus dados
+router.put('/:id', autenticar, tarologosController.atualizarTarologo);
 
-// Quando mandarem um DELETE com um ID, chama a removerTarologo
-router.delete('/:id', tarologosController.removerTarologo);
+// PROTEGIDA (ADMIN): Apenas o Admin remove tarólogos por essa rota geral
+router.delete('/:id', autenticar, apenasAdmin, tarologosController.removerTarologo);
 
 module.exports = router;
