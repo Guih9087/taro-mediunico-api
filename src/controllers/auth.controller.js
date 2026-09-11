@@ -7,7 +7,7 @@ const { clientes } = require('./cliente.controller');
 const { tarologos } = require('./tarologos.controller');
 const { admins } = require('./admin.controller');
 
-const SECRET_KEY = 'sua_chave_secreta_super_segura';
+const SECRET_KEY = 'minha_chave_secreta_taro_mediunico';
 
 const login = (req, res, next) => {
     try {
