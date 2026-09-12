@@ -1,7 +1,7 @@
 // src/middlewares/auth.middleware.js
 
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'minha_chave_secreta_taro_mediunico';
+const SECRET_KEY = process.env.JWT_SECRET || 'chave_backup';
 
 // Verifica se a requisição possui um Token JWT válido
 const autenticar = (req, res, next) => {
@@ -19,7 +19,7 @@ const autenticar = (req, res, next) => {
     const token = parts[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, SECRET_KEY);
         req.usuario = decoded; // Anexa os dados decodificados (id, email, tipo) no objeto da requisição
         return next(); // Libera para prosseguir até a rota final
     } catch (err) {

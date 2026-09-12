@@ -7,7 +7,7 @@ const { clientes } = require('./cliente.controller');
 const { tarologos } = require('./tarologos.controller');
 const { admins } = require('./admin.controller');
 
-const SECRET_KEY = 'minha_chave_secreta_taro_mediunico';
+const SECRET_KEY = process.env.JWT_SECRET || 'chave_backup';
 
 const login = (req, res, next) => {
     try {
