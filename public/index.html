@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaroMediunico - Consultas de Tarot Online</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header / Navegação -->
+    <header class="navbar">
+        <div class="brand">🔮 TaroMediunico</div>
+        <div class="nav-actions">
+            <span id="usuario-info" class="hidden" style="color: var(--text-muted); font-size: 0.9rem;"></span>
+            <button id="btn-login" class="btn btn-primary" onclick="abrirModalLogin()">Entrar / Cadastrar</button>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-container">
+
+        <!-- 1. TELA DO CLIENTE / VISITANTE (Catálogo de Tarólogos) -->
+        <section id="view-cliente" class="view-section">
+            <h2 class="section-title">Tarólogos Disponíveis para Consulta</h2>
+            <div id="grid-tarologos" class="tarologos-grid">
+                <p>Carregando tarólogos...</p>
+            </div>
+        </section>
+
+        <!-- 2. TELA DO TARÓLOGO (Dashboard de Atendimentos e Lucros) -->
+        <section id="view-tarologo" class="view-section hidden">
+            <h2 class="section-title">Painel do Tarólogo - Atendimentos & Ganhos</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="tarologo-card" style="padding: 1rem;">
+                    <p style="color: var(--text-muted);">Consultas Realizadas (Mês)</p>
+                    <h3 style="font-size: 1.8rem; color: var(--primary); margin-top: 0.5rem;">12</h3>
+                </div>
+                <div class="tarologo-card" style="padding: 1rem;">
+                    <p style="color: var(--text-muted);">Lucro Acumulado</p>
+                    <h3 style="font-size: 1.8rem; color: var(--accent); margin-top: 0.5rem;">R$ 1.800,00</h3>
+                </div>
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Solicitações de Atendimento Pendentes</h3>
+            <div class="tarologo-card">
+                <p style="color: var(--text-muted);">Nenhum atendimento na fila no momento.</p>
+            </div>
+        </section>
+
+        <!-- 3. TELA DO ADMINISTRADOR (Gestão Completa) -->
+        <section id="view-admin" class="view-section hidden">
+            <h2 class="section-title">Painel Administrativo - Gestão Geral</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="tarologo-card" style="padding: 1rem;">
+                    <p style="color: var(--text-muted);">Total de Clientes</p>
+                    <h3 style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">45</h3>
+                </div>
+                <div class="tarologo-card" style="padding: 1rem;">
+                    <p style="color: var(--text-muted);">Total de Tarólogos</p>
+                    <h3 style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">4</h3>
+                </div>
+                <div class="tarologo-card" style="padding: 1rem;">
+                    <p style="color: var(--text-muted);">Faturamento Global</p>
+                    <h3 style="font-size: 1.5rem; color: var(--accent); margin-top: 0.5rem;">R$ 7.200,00</h3>
+                </div>
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Ações Administrativas</h3>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" onclick="alert('Funcionalidade de cadastrar tarólogo em breve!')">Cadastrar Novo Tarólogo</button>
+                <button class="btn btn-outline" onclick="alert('Exportando relatórios financeiros...')">Exportar Relatórios</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Autenticação -->
+    <div id="modal-login" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close" onclick="fecharModalLogin()">✕</button>
+            <h3 style="margin-bottom: 1.5rem;">Acessar a Plataforma</h3>
+            
+            <form id="form-login">
+                <div class="form-group">
+                    <label>Tipo de Perfil</label>
+                    <select id="login-tipo" class="form-control">
+                        <option value="cliente">Cliente</option>
+                        <option value="tarologo">Tarólogo</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="login-email" class="form-control" value="gui@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-senha" class="form-control" value="123456" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Privada do Chat -->
+    <div id="modal-chat" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="fecharModalChat()">✕</button>
+            <h3 style="margin-bottom: 1rem;">Consulta Ao Vivo</h3>
+            
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <p style="color: var(--text-muted); text-align: center; font-size: 0.85rem;">
+                        Conexão segura estabelecida. Inicie o seu atendimento abaixo.
+                    </p>
+                </div>
+
+                <form id="form-chat-mensagem" class="chat-input-group">
+                    <input type="text" id="chat-input" class="form-control" placeholder="Digite sua mensagem..." required>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

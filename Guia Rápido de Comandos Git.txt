@@ -27,6 +27,8 @@ Atualizar e Sincronizar
 
 
 git pull origin main — Baixa as alterações do GitHub para a sua máquina local.
+Baixou o projeto pela 1ª vez na máquina: git clone -> npm install -> npm run dev (ou node server.js).
+Já tinha o projeto e só quer atualizar: git pull -> npm install (caso você tenha instalado alguma biblioteca nova em outro computador) -> npm run dev.
 
 git fetch — Busca as atualizações do servidor sem aplicar alterações no código ainda.
 
