@@ -30,79 +30,91 @@
 
         <!-- 2. TELA DO TARÓLOGO (Dashboard de Atendimentos e Lucros) -->
         <section id="view-tarologo" class="view-section hidden">
-            <h2 class="section-title">Painel do Tarólogo - Atendimentos & Ganhos</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                <div class="tarologo-card" style="padding: 1rem;">
-                    <p style="color: var(--text-muted);">Consultas Realizadas (Mês)</p>
-                    <h3 style="font-size: 1.8rem; color: var(--primary); margin-top: 0.5rem;">12</h3>
-                </div>
-                <div class="tarologo-card" style="padding: 1rem;">
-                    <p style="color: var(--text-muted);">Lucro Acumulado</p>
-                    <h3 style="font-size: 1.8rem; color: var(--accent); margin-top: 0.5rem;">R$ 1.800,00</h3>
-                </div>
-            </div>
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Solicitações de Atendimento Pendentes</h3>
-            <div class="tarologo-card">
-                <p style="color: var(--text-muted);">Nenhum atendimento na fila no momento.</p>
-            </div>
-        </section>
+    <h2 class="section-title">Painel de Monitoramento do Tarólogo</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Consultas Realizadas</p>
+            <h3 id="tarologo-consultas" style="font-size: 1.8rem; color: var(--primary); margin-top: 0.5rem;">0</h3>
+        </div>
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Lucro Acumulado</p>
+            <h3 id="tarologo-lucro" style="font-size: 1.8rem; color: var(--accent); margin-top: 0.5rem;">R$ 0,00</h3>
+        </div>
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Fila de Atendimento</p>
+            <h3 id="tarologo-fila" style="font-size: 1.8rem; color: #38bdf8; margin-top: 0.5rem;">0</h3>
+        </div>
+    </div>
+    <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Próximos Clientes na Fila</h3>
+    <div class="tarologo-card">
+        <p style="color: var(--text-muted);">Nenhum cliente aguardando no momento.</p>
+    </div>
+</section>
 
         <!-- 3. TELA DO ADMINISTRADOR (Gestão Completa) -->
         <section id="view-admin" class="view-section hidden">
-            <h2 class="section-title">Painel Administrativo - Gestão Geral</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                <div class="tarologo-card" style="padding: 1rem;">
-                    <p style="color: var(--text-muted);">Total de Clientes</p>
-                    <h3 style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">45</h3>
-                </div>
-                <div class="tarologo-card" style="padding: 1rem;">
-                    <p style="color: var(--text-muted);">Total de Tarólogos</p>
-                    <h3 style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">4</h3>
-                </div>
-                <div class="tarologo-card" style="padding: 1rem;">
-                    <p style="color: var(--text-muted);">Faturamento Global</p>
-                    <h3 style="font-size: 1.5rem; color: var(--accent); margin-top: 0.5rem;">R$ 7.200,00</h3>
-                </div>
-            </div>
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Ações Administrativas</h3>
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn btn-outline" onclick="alert('Funcionalidade de cadastrar tarólogo em breve!')">Cadastrar Novo Tarólogo</button>
-                <button class="btn btn-outline" onclick="alert('Exportando relatórios financeiros...')">Exportar Relatórios</button>
-            </div>
-        </section>
+    <h2 class="section-title">Painel Administrativo - Gestão Geral</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Total de Clientes</p>
+            <h3 id="admin-total-clientes" style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">0</h3>
+        </div>
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Total de Tarólogos</p>
+            <h3 id="admin-total-tarologos" style="font-size: 1.5rem; color: var(--text-main); margin-top: 0.5rem;">0</h3>
+        </div>
+        <div class="tarologo-card" style="padding: 1rem;">
+            <p style="color: var(--text-muted);">Faturamento Global</p>
+            <h3 id="admin-faturamento-global" style="font-size: 1.5rem; color: var(--accent); margin-top: 0.5rem;">R$ 0,00</h3>
+        </div>
+    </div>
+</section>
 
     </main>
 
-    <!-- Modal de Autenticação -->
-    <div id="modal-login" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button class="modal-close" onclick="fecharModalLogin()">✕</button>
-            <h3 style="margin-bottom: 1.5rem;">Acessar a Plataforma</h3>
+<!-- Modal de Autenticação e Cadastro -->
+<div id="modal-login" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button type="button" id="btn-fechar-modal" class="modal-close">✕</button>
+        <h3 id="modal-titulo" style="margin-bottom: 1.5rem;">Acessar a Plataforma</h3>
+        
+        <form id="form-login">
+            <!-- Campo de tipo de perfil visível APENAS no cadastro -->
+            <div class="form-group" id="grupo-tipo-cadastro" style="display: none;">
+                <label>Deseja se cadastrar como:</label>
+                <select id="cadastro-tipo" class="form-control">
+                    <option value="cliente">Cliente (Consultar Tarólogos)</option>
+                    <option value="tarologo">Tarólogo (Prestar Atendimentos)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="grupo-nome" style="display: none;">
+                <label>Nome Completo</label>
+                <input type="text" id="cadastro-nome" class="form-control" placeholder="Seu nome">
+            </div>
+
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="login-email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Senha</label>
+                <div class="password-container">
+                    <input type="password" id="login-senha" class="form-control" placeholder="Sua senha" required>
+                    <button type="button" id="btn-toggle-senha" class="btn-toggle-senha">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-submit-auth" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Entrar</button>
             
-            <form id="form-login">
-                <div class="form-group">
-                    <label>Tipo de Perfil</label>
-                    <select id="login-tipo" class="form-control">
-                        <option value="cliente">Cliente</option>
-                        <option value="tarologo">Tarólogo</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="login-email" class="form-control" value="gui@email.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="login-senha" class="form-control" value="123456" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
-            </form>
-        </div>
+            <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+                <span id="texto-alternancia">Não tem uma conta?</span> 
+                <a href="#" id="link-alternar-modo" style="color: var(--primary); text-decoration: none; font-weight: bold;">Cadastre-se</a>
+            </p>
+        </form>
     </div>
+</div>
 
     <!-- Modal Privada do Chat -->
     <div id="modal-chat" class="modal-overlay hidden">

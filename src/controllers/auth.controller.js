@@ -2,10 +2,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Importamos os bancos em memória para validar logins
-const { clientes } = require('./cliente.controller');
-const { tarologos } = require('./tarologos.controller');
-const { admins } = require('./admin.controller');
+// Importamos os bancos em memória para validar logins com segurança (fallback para array vazio)
+const clienteModule = require('./cliente.controller');
+const tarologoModule = require('./tarologos.controller');
+const adminModule = require('./admin.controller');
+
+const clientes = clienteModule.clientes || [];
+const tarologos = tarologoModule.tarologos || [];
+const admins = adminModule.admins || [];
 
 const SECRET_KEY = process.env.JWT_SECRET || 'chave_backup';
 
@@ -19,7 +23,7 @@ const login = (req, res, next) => {
             throw erro;
         }
 
-        // Junta todas as listas para procurar o usuário
+        // Junta todas as listas de forma segura
         const todosUsuarios = [
             ...clientes.map(c => ({ ...c, tipo: 'CLIENTE' })),
             ...tarologos.map(t => ({ ...t, tipo: 'TAROLOGO' })),

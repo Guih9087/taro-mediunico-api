@@ -6,6 +6,9 @@ const tarologosController = require('../controllers/tarologos.controller');
 // Importamos os middlewares de segurança
 const { autenticar, apenasAdmin } = require('../middlewares/auth.middlewares');
 
+// PROTEGIDA: Rota de estatísticas do tarólogo logado (fica antes de /:id para o Express não confundir)
+router.get('/estatisticas', autenticar, tarologosController.obterEstatisticasTarologo);
+
 // PÚBLICAS: Qualquer cliente/visitante pode ver a lista de aprovados e ver detalhes
 router.get('/', tarologosController.listarTarologos);
 router.get('/:id', tarologosController.buscarTarologo);

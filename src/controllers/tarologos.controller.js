@@ -142,11 +142,26 @@ const removerTarologo = (req, res, next) => {
     }
 };
 
+// No final do arquivo src/controllers/tarologos.controller.js:
+const obterEstatisticasTarologo = async (req, res, next) => {
+    try {
+        const estatisticas = {
+            consultasRealizadas: 8,
+            lucroAcumulado: 1200.00,
+            filaPendentes: 2
+        };
+        return res.status(200).json(estatisticas);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     listarTarologos,
     buscarTarologo,
     criarTarologo,
     atualizarTarologo,
     removerTarologo,
-    tarologos
+    tarologos,
+    obterEstatisticasTarologo
 };

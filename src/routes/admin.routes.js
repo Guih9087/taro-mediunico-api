@@ -14,5 +14,6 @@ router.get('/dashboard', autenticar, apenasAdmin, adminController.painelAdmin);
 router.get('/tarologos', adminController.listarTodosTarologos);
 router.patch('/tarologos/:id/status', adminController.alterarStatusTarologo);
 router.delete('/tarologos/:id', adminController.deletarTarologo);
+router.get('/estatisticas', autenticar, apenasAdmin, adminController.obterEstatisticas);
 
 module.exports = router;
